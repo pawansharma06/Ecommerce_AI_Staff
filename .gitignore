@@ -25,6 +25,7 @@ Thumbs.db
 **/node_modules/
 **/dist/
 **/build/
+**/.vite/
 .npm
 package-lock.json.bak
 
