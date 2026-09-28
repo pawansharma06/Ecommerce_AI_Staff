@@ -1,6 +1,8 @@
-# 🛍️ Ecommerce AI Staff (ShopAI)
+# 🛍️ Ecommerce AI Staff — Autonomous AI Agent & Copilot for Shopify & WooCommerce
 
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
+[![Shopify](https://img.shields.io/badge/Shopify-Admin%20GraphQL-96bf48.svg?logo=shopify&logoColor=white)](https://shopify.dev/)
+[![WooCommerce](https://img.shields.io/badge/WooCommerce-REST%20API%20v3-7f54b3.svg?logo=woocommerce&logoColor=white)](https://woocommerce.com/)
 [![Java](https://img.shields.io/badge/Java-21-orange.svg)](https://openjdk.org/projects/jdk/21/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3.x-green.svg)](https://spring.io/projects/spring-boot)
 [![React](https://img.shields.io/badge/React-18.x-61dafb.svg)](https://react.dev/)
@@ -9,14 +11,18 @@
 [![Redis](https://img.shields.io/badge/Redis-7-red.svg)](https://redis.io/)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ed.svg)](https://www.docker.com/)
 
-**Ecommerce AI Staff** is a production-grade, self-hosted, multi-tenant AI workforce and orchestration platform for modern e-commerce stores. It acts as an autonomous virtual operations team capable of handling 24/7 customer support, live catalog search, order management, inventory tracking, policy Q&A, multimodal interactions (Voice & Vision), and proactive business analytics.
+**Ecommerce AI Staff (ShopAI)** is an open-source, **self-hosted, single-tenant private AI staff and copilot** designed specifically for **Shopify** and **WooCommerce** stores. 
+
+It deploys as a standalone private application dedicated entirely to your store—giving you 100% data ownership, zero cross-tenant data exposure, and full control over your AI operations. It acts as an autonomous virtual workforce handling 24/7 customer support, live catalog search, order tracking, inventory synchronization, policy Q&A, multimodal interactions (Voice & Vision), and real-time merchant analytics.
 
 ---
 
 ## 📑 Table of Contents
 
-- [Overview & Architecture](#-overview--architecture)
+- [Why Ecommerce AI Staff?](#-why-ecommerce-ai-staff)
+- [Shopify & WooCommerce Integration](#-shopify--woocommerce-integration)
 - [Core Features](#-core-features)
+- [Architecture Overview](#-architecture-overview)
 - [Technology Stack](#-technology-stack)
 - [Repository Structure](#-repository-structure)
 - [Prerequisites](#-prerequisites)
@@ -25,57 +31,37 @@
   - [Method 2: Local Development Setup](#method-2-local-development-setup)
 - [Configuration & Initial Setup](#-configuration--initial-setup)
   - [1. Admin Login](#1-admin-login)
-  - [2. Commerce Store Integration (Shopify & WooCommerce)](#2-commerce-store-integration-shopify--woocommerce)
-  - [3. AI Provider Configuration (OpenAI, Gemini, Local LLM)](#3-ai-provider-configuration-openai-gemini-local-llm)
-  - [4. Multimodal Setup (TTS, STT, Vision)](#4-multimodal-setup-tts-stt-vision)
+  - [2. Shopify Private App Setup](#2-shopify-private-app-setup)
+  - [3. WooCommerce Private App Setup](#3-woocommerce-private-app-setup)
+  - [4. AI Provider Setup (OpenAI GPT-4o, Google Gemini, Local LLM)](#4-ai-provider-setup-openai-gpt-4o-google-gemini-local-llm)
+  - [5. Multimodal Voice & Vision Setup](#5-multimodal-voice--vision-setup)
 - [Human-in-the-Loop & Safety Guardrails](#-human-in-the-loop--safety-guardrails)
 - [API & Swagger Documentation](#-api--swagger-documentation)
-- [Database & Migrations](#-database--migrations)
 - [Contributing](#-contributing)
 - [License](#-license)
 
 ---
 
-## 🌟 Overview & Architecture
+## 🎯 Why Ecommerce AI Staff?
 
-Ecommerce AI Staff bridges the gap between Large Language Models (LLMs) and real-time commerce data. Instead of generic chatbot responses, it executes real business actions through structured tool calling, deterministic safety gates, hybrid vector search (pgvector HNSW), and knowledge graph entity mapping.
+- **🔒 Dedicated Single-Tenant Architecture**: Your catalog, customers, order histories, and proprietary knowledge stay on your own infrastructure. No shared databases, no third-party data aggregation.
+- **⚡ Real-Time Shopify & WooCommerce Sync**: Powered by Shopify Admin GraphQL and WooCommerce REST API v3 with HMAC-verified webhooks for zero-delay synchronization.
+- **🧠 Multi-LLM Intelligence**: Seamlessly switch between **OpenAI (GPT-4o / GPT-4o-mini)**, **Google Gemini (1.5 Pro / Flash)**, or run completely offline with **Local LLM (Ollama)** fallback.
+- **👁️ Multimodal AI Capabilities**: Let customers search products by uploading photos (Computer Vision) or speaking directly to your store (Voice TTS/STT).
+- **🛡️ Deterministic Safety Gates**: Mutating actions like issuing refunds, canceling orders, or changing stock require merchant operator authorization before execution.
 
-```
-                      ┌──────────────────────────────────────────────────────────┐
-                      │              Customer Channels                           │
-                      │       (Web Widget / WhatsApp / Email)                   │
-                      └────────────────────────┬─────────────────────────────────┘
-                                               │
-                                               ▼
-                      ┌──────────────────────────────────────────────────────────┐
-                      │                 Nginx Reverse Proxy                      │
-                      └────────────────────────┬─────────────────────────────────┘
-                                               │
-                         ┌─────────────────────┴─────────────────────┐
-                         ▼                                           ▼
-          ┌─────────────────────────────┐             ┌─────────────────────────────┐
-          │     React 18 Frontend       │             │   Spring Boot 3.3 Backend   │
-          │ (Vite + TypeScript + MUI)   │             │   (Java 21 LTS + Security)  │
-          └─────────────────────────────┘             └──────────────┬──────────────┘
-                                                                     │
-              ┌──────────────────────────────────────────────────────┼──────────────────────────────────────────────────────┐
-              ▼                                                      ▼                                                      ▼
-┌───────────────────────────┐                          ┌───────────────────────────┐                          ┌───────────────────────────┐
-│     AI Agent Engine       │                          │     Hybrid RAG Engine     │                          │     Commerce Connectors   │
-│  - Tool Registry          │                          │  - pgvector HNSW Vector   │                          │  - Shopify GraphQL & Hooks│
-│  - Human Approval Gates   │                          │  - Entity Knowledge Graph │                          │  - WooCommerce REST v3    │
-│  - Multi-LLM Orchestrator │                          │  - Policy & FAQ Documents │                          │  - Real-time Webhooks     │
-└─────────────┬─────────────┘                          └─────────────┬─────────────┘                          └─────────────┬─────────────┘
-              │                                                      │                                                      │
-              └──────────────────────────────────────────────────────┼──────────────────────────────────────────────────────┘
-                                                                     │
-                                       ┌─────────────────────────────┴─────────────────────────────┐
-                                       ▼                                                           ▼
-                        ┌─────────────────────────────┐                             ┌─────────────────────────────┐
-                        │   PostgreSQL 16 + pgvector  │                             │           Redis 7           │
-                        │ (Orders, Products, Vectors) │                             │  (Cache, Queues, Sessions)  │
-                        └─────────────────────────────┘                             └─────────────────────────────┘
-```
+---
+
+## 🛍️ Shopify & WooCommerce Integration
+
+| Capability | Shopify Integration | WooCommerce Integration |
+|---|---|---|
+| **App Type** | Dedicated Private / Custom App | Dedicated Private REST App |
+| **Protocol** | Admin GraphQL API (2024-10+) | REST API v3 with Consumer Key/Secret |
+| **Catalog Sync** | Real-time Products, Variants, Inventory | Real-time Products, SKUs, Stock Levels |
+| **Order Management** | Status, Line Items, Fulfillment, Tracking | Status, Shipping Details, Order Items |
+| **Webhooks** | HMAC-SHA256 verified inbound webhooks | Secret-verified inbound webhooks |
+| **Customer Insights** | Order History, Lifetime Value, Abandoned Checkouts | Order History, Total Spend, Cart Details |
 
 ---
 
@@ -83,15 +69,22 @@ Ecommerce AI Staff bridges the gap between Large Language Models (LLMs) and real
 
 | Feature | Description |
 |---|---|
-| 🤖 **Autonomous AI Staff Engine** | Multi-turn reasoning loop with deterministic tool calling and structured output parsing. |
-| 🛍️ **Multi-Store Private Apps** | Dedicated integration management for **Shopify** (Admin GraphQL API) and **WooCommerce** (REST API v3). |
-| 🧠 **Multi-LLM Orchestration** | Choose your primary provider: **OpenAI (GPT-4o, GPT-4o-mini)**, **Google Gemini (1.5 Pro, 1.5 Flash)**, or **Local Fallback (Ollama / Self-hosted)**. |
-| 🎙️ **Multimodal Voice & Vision** | Built-in Text-to-Speech (TTS), Speech-to-Text (STT Whisper), and Vision AI for visual product search and defect inspection. |
-| 🛡️ **Human-in-the-Loop Approval** | High-impact actions (refunds, order cancellation, discount codes, inventory write) trigger human authorization gates before execution. |
-| 🔍 **Hybrid Vector + Graph RAG** | Combines pgvector cosine similarity search (`HNSW` index) with relational Knowledge Graph discovery (Customer-Product-Order associations). |
-| 💬 **Omni-Channel Customer Messaging** | Connect customers seamlessly through Webchat, WhatsApp Cloud API, and Email (SMTP/IMAP). |
-| 🏢 **Enterprise Multi-Tenancy** | Strict database-level and query-level tenant isolation with granular Role-Based Access Control (RBAC). |
-| 📊 **Real-Time Analytics & Audit** | Complete observability with tool call counts, token consumption tracking, response latency, and immutable audit logs. |
+| 🤖 **Autonomous AI Staff Engine** | ReAct reasoning loop with typed tool execution and structured output generation. |
+| 🛒 **Shopify & WooCommerce Connectors** | Built-in private app adapters for live product search, order lookup, and stock validation. |
+| 🧠 **Multi-LLM Orchestration** | Primary provider choice: **OpenAI (GPT-4o)**, **Google Gemini (1.5 Pro)**, or **Local Offline Fallback**. |
+| 🎙️ **Multimodal Voice & Vision** | Real-time Speech-to-Text (Whisper), natural Text-to-Speech (TTS), and visual product search with Vision AI. |
+| 🛡️ **Human-in-the-Loop Approval** | Safety gate dashboard for high-risk operations (refunds, order cancellation, discount issuance). |
+| 🔍 **Hybrid Vector + Graph RAG** | PostgreSQL `pgvector` (`HNSW` index) cosine similarity search paired with relational Knowledge Graph discovery. |
+| 💬 **Omni-Channel Customer Support** | Embeddable Webchat widget, WhatsApp Business Cloud API, and Email (SMTP/IMAP) routing. |
+| 🏢 **Single-Tenant Private App** | Dedicated database and process boundaries for 100% store privacy and security. |
+| 📊 **Real-Time Analytics & Audit** | Full observability into token consumption, tool execution frequency, response latency, and audit logs. |
+
+---
+
+## 🌟 Architecture Overview
+
+Ecommerce AI Staff connects directly to your Shopify or WooCommerce store and mediates all AI agent actions through deterministic safety tools and hybrid RAG retrieval.
+
 
 ---
 
@@ -380,4 +373,11 @@ Contributions are welcome! Please follow these steps:
 ## 📄 License
 
 Distributed under the Apache 2.0 License. See [`LICENSE`](LICENSE) for more information.
+
+---
+
+## 🏷️ Keywords & Search Tags
+
+`shopify-ai` • `woocommerce-ai` • `shopify-ai-agent` • `shopify-copilot` • `woocommerce-copilot` • `ecommerce-ai-staff` • `autonomous-ecommerce-agent` • `self-hosted-ecommerce-ai` • `single-tenant-ai` • `shopify-private-app` • `woocommerce-rest-api` • `gpt-4o-shopify` • `gemini-ecommerce` • `pgvector-rag` • `multimodal-ecommerce` • `ai-customer-support` • `ecommerce-chatbot`
+
 
