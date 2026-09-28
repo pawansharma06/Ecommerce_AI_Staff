@@ -43,3 +43,9 @@ redis_data/
 .DS_Store
 Desktop.ini
 
+# AI Agent Context
+AGENTS.md
+AI_CONTEXT.md
+*.ai.md
+
+
