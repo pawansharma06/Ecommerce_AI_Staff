@@ -1,0 +1,98 @@
+spring:
+  application:
+    name: shopai
+
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:shopai}
+    username: ${POSTGRES_USER:shopai}
+    password: ${POSTGRES_PASSWORD:shopai}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 0
+      connection-timeout: 3000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      initialization-fail-timeout: -1
+      leak-detection-threshold: 60000
+      pool-name: ShopAiHikariPool
+
+  jpa:
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        temp:
+          use_jdbc_metadata_defaults: false
+
+  flyway:
+    enabled: ${FLYWAY_ENABLED:true}
+    locations: classpath:db/migration
+    baseline-on-migrate: false
+    validate-on-migrate: true
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      timeout: 2000ms
+
+server:
+  port: ${BACKEND_PORT:8085}
+  servlet:
+    context-path: /
+  error:
+    include-message: never
+    include-stacktrace: never
+    include-binding-errors: never
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: when_authorized
+    prometheus:
+      enabled: true
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+
+logging:
+  level:
+    root: INFO
+    com.shopai: DEBUG
+    org.springframework.security: WARN
+    org.hibernate: WARN
+    org.flywaydb: INFO
+
+app:
+  version: ${APP_VERSION:1.0.0-SNAPSHOT}
+  name: shopai
+  encryption:
+    secret: ${ENCRYPTION_SECRET:c8b4f2a1d9e3f7b5a8c2e4d6f1a3b5c7}
+  jwt:
+    # 256-bit default development key (overridden in production via JWT_SECRET env)
+    secret: ${JWT_SECRET:9a4f2c8d3e7b1a5f6c8d2e4a7b9c1d3e5f8a0b2c4d6e8f1a3b5c7d9e1f2a4b6c}
+    expiration-seconds: ${JWT_EXPIRATION_SECONDS:3600}
+    refresh-expiration-seconds: ${JWT_REFRESH_EXPIRATION_SECONDS:604800}
+    cookie-secure: ${JWT_COOKIE_SECURE:false}
+    cookie-same-site: ${JWT_COOKIE_SAME_SITE:Lax}
+
+shopify:
+  shop-domain: ${SHOPIFY_SHOP_DOMAIN:}
+  admin-access-token: ${SHOPIFY_ADMIN_ACCESS_TOKEN:}
+  webhook-secret: ${SHOPIFY_WEBHOOK_SECRET:}
+  api-version: ${SHOPIFY_API_VERSION:2024-04}

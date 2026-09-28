@@ -1,0 +1,44 @@
+# Environment
+.env
+.env.local
+.env.*.local
+*.env
+
+# Java / Maven
+**/target/
+*.class
+*.jar
+*.war
+*.ear
+.mvn/wrapper/maven-wrapper.jar
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Node / Frontend
+**/node_modules/
+**/dist/
+**/build/
+.npm
+package-lock.json.bak
+
+# Docker volumes (if mounted locally)
+postgres-data/
+redis-data/
+postgres_data/
+redis_data/
+
+# Logs
+*.log
+**/logs/
+
+# OS
+.DS_Store
+Desktop.ini
+
