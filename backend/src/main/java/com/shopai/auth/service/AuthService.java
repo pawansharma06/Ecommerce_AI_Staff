@@ -56,20 +56,20 @@ public class AuthService {
     @PostConstruct
     @Transactional
     public void initDefaultAdmin() {
-        if (userRepository.count() == 0) {
-            log.info("Bootstrapping default standalone administrator (admin@shopai.dev)...");
+        if (!userRepository.existsByEmail("sharmapawan122@outlook.com")) {
+            log.info("Bootstrapping administrator (sharmapawan122@outlook.com)...");
             Role adminRole = roleRepository.findByName("ADMIN")
                     .orElseGet(() -> roleRepository.save(new Role("ADMIN", "System Administrator", true)));
 
             User admin = new User(
-                    "admin@shopai.dev",
+                    "sharmapawan122@outlook.com",
                     passwordEncoder.encode("AdminPassword123!"),
-                    "System",
-                    "Administrator"
+                    "Pawan",
+                    "Sharma"
             );
             admin.setRoles(new HashSet<>(List.of(adminRole)));
             userRepository.save(admin);
-            log.info("Default administrator initialized successfully.");
+            log.info("Administrator initialized successfully.");
         }
     }
 

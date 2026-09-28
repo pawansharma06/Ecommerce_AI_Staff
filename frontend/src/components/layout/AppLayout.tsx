@@ -449,7 +449,7 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
                   Admin
                 </Typography>
                 <Typography variant="caption" sx={{ color: '#64748b', fontSize: '0.7rem' }}>
-                  {user?.email || 'admin@shopai.dev'}
+                  {user?.email || 'sharmapawan122@outlook.com'}
                 </Typography>
               </Box>
             </Box>

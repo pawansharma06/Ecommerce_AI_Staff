@@ -10,7 +10,7 @@
 
 **Do not open a public GitHub issue for security vulnerabilities.**
 
-Please report security vulnerabilities by emailing: security@shopai.dev
+Please report security vulnerabilities by emailing: sharmapawan122@outlook.com
 
 Include:
 - Description of the vulnerability

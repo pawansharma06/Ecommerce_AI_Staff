@@ -267,7 +267,7 @@ npm run dev
 Access the web dashboard at **`http://localhost`** (or `http://localhost:3000`).
 
 Default Seed Admin Credentials:
-- **Email**: `admin@shopai.dev`
+- **Email**: `sharmapawan122@outlook.com`
 - **Password**: `AdminPassword123!`
 
 ---

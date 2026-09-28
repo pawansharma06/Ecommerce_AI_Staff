@@ -24,7 +24,7 @@ Examples of unacceptable behavior:
 
 ## Enforcement
 
-Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to the community leaders at: conduct@shopai.dev
+Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to the community leaders at: sharmapawan122@outlook.com
 
 All complaints will be reviewed and investigated promptly and fairly.
 

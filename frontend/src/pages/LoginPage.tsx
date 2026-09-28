@@ -21,7 +21,7 @@ export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [email, setEmail] = useState('admin@shopai.dev');
+  const [email, setEmail] = useState('sharmapawan122@outlook.com');
   const [password, setPassword] = useState('AdminPassword123!');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -122,7 +122,7 @@ export const LoginPage: React.FC = () => {
           </Button>
 
           <Typography variant="caption" color="text.secondary" sx={{ display: 'block', textAlign: 'center', mt: 1 }}>
-            Default admin: <code>admin@shopai.dev</code>
+            Default admin: <code>sharmapawan122@outlook.com</code>
           </Typography>
         </Box>
       </Paper>
